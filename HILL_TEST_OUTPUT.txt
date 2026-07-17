@@ -1,0 +1,42 @@
+============================================================
+TOXICITY FUNCTIONAL-FORM SENSITIVITY  (bioremediation_hill_test.m)
+------------------------------------------------------------
+bilinear (linear) toxic term :  gamma*P*M
+saturating (Hill) toxic term :  gamma*P*M/(K_T + P),   K_T = 1
+all other parameters at nominal values
+============================================================
+
+>> bioremediation_hill_test
+model   start      P*        M*
+linear    1     0.6277   3.0379
+hill      1     0.5715   3.2410
+linear    2    10.0000   0.0000
+hill      2     0.5716   3.2409
+linear    3     0.6278   3.0378
+hill      3     0.5715   3.2410
+linear    4     0.6278   3.0378
+hill      4     0.5715   3.2411
+linear    5    10.0000   0.0000
+hill      5     0.5715   3.2410
+
+recovery basin fraction (linear): 0.891
+recovery basin fraction (hill)  : 0.971
+
+washout E0 transverse eigenvalue (linear): -0.1545
+washout E0 transverse eigenvalue (hill)  : +0.3000
+
+============================================================
+READING
+------------------------------------------------------------
+Under the bilinear toxic term the washout state E0 = (10, 0) is a stable
+sink (transverse eigenvalue -0.1545), and two of the five sampled starts
+(low biomass, high pollutant) collapse to it: the system is bistable.
+
+Under the saturating (Hill) toxic term the per-capita toxic mortality at
+P0 = 10 drops from gamma*P0 = 0.5 to gamma*P0/(K_T+P0) = 0.045, so the
+transverse eigenvalue at E0 turns positive (+0.30): the washout state
+loses stability, ALL five starts recover, and the recovery basin grows
+from 0.891 to 0.971. The bistability of the bilinear model is therefore
+contingent on the toxic response not saturating; the bilinear form is a
+conservative, worst-case description of remediation failure.
+============================================================

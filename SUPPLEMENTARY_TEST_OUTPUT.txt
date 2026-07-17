@@ -1,6 +1,6 @@
 ============================================================
- SUPPLEMENTARY TESTS (V4/V5) - MATLAB Online console output
- Script: bioremediation_tests_v4.m
+ SUPPLEMENTARY TESTS - MATLAB Online console output
+ Script: bioremediation_tests.m
 ============================================================
 
 TEST A - SP convergence (t>=20):
