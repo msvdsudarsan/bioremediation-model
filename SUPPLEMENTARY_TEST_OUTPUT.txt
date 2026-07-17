@@ -1,0 +1,31 @@
+============================================================
+ SUPPLEMENTARY TESTS (V4/V5) - MATLAB Online console output
+ Script: bioremediation_tests_v4.m
+============================================================
+
+TEST A - SP convergence (t>=20):
+   eps      max error
+  1.000    7.755e-02
+  0.500    3.386e-02
+  0.200    1.244e-02
+  0.100    6.029e-03
+  0.050    2.965e-03
+  0.020    1.174e-03
+  0.010    5.853e-04
+   fitted log-log slope = 1.054   (=> error ~ O(eps^1.05))
+   VERDICT: PASS - confirms O(eps) Fenichel convergence.
+
+TEST B - fold boundary gamma_c(K):
+   max |closed form - numerical| over K = 4.984e-06
+   nominal gamma_c(K=1) = 0.10718
+   VERDICT: PASS - analytical fold formula exact across K in [0.5, 2].
+
+TEST C - basin of attraction:
+   fraction of initial states -> recovery (E1) = 0.891
+   VERDICT: PASS - bistability + separatrix confirmed; 89.1% recovery basin.
+
+Figures produced:
+   fig_sp_convergence.pdf   (Test A)
+   fig_tipping_boundary.pdf (Test B)
+   fig_basins.pdf           (Test C)
+============================================================

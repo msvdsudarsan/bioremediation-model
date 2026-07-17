@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software or the accompanying results, please cite the paper below."
+title: "A Singularly Perturbed Nonlinear Dynamical Model for Microbial Bioremediation of Pharmaceutical Pollutants in Soil: Stability, Bistability, and Bifurcation Analysis"
+authors:
+  - family-names: "Sudarsan"
+    given-names: "M. S. V. D."
+    orcid: "https://orcid.org/0009-0001-2126-6428"
+  - family-names: "Deevi Reddy"
+    given-names: "Prabhakara Reddy"
+    orcid: "https://orcid.org/0000-0001-9726-2944"
+  - family-names: "Deevi Reddy"
+    given-names: "Anitha"
+    orcid: "https://orcid.org/0000-0002-4283-4789"
+  - family-names: "Yadav"
+    given-names: "Y. Rajesh"
+    orcid: "https://orcid.org/0009-0000-1815-9608"
+year: 2026
+license: MIT
