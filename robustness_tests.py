@@ -1,17 +1,3 @@
-"""
-Supplementary robustness / verification tests for the bioremediation model.
-Purely algebraic (no ODE integration): fast and reproducible.
-Outputs:
-  - console + robustness_report.txt : numerical summary
-  - fig_supplementary.pdf           : (a) PRCC tornado for healthy biomass M1*,
-                                      (b) tipping-boundary map gamma_c(theta,K),
-                                      (c) numerical vs closed-form gamma_c.
-Model (paper Eqs. 9-11):
-  quadratic:  gamma P^2 + (mu + gamma K - theta) P + mu K = 0
-  biomass:    M* = (sigma - delta P*)(K + P*) / (alpha P*)
-  admissible: 0 < P* < sigma/delta   and   M* > 0
-  fold:       gamma_c = (sqrt(theta) - sqrt(mu))^2 / K
-"""
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
@@ -22,16 +8,13 @@ lines = []
 def log(s=""):
     print(s); lines.append(s)
 
-# ---- parameter ranges (+-~50% around the paper's nominal set) ----
 names  = ["sigma","delta","alpha","K","theta","mu","gamma"]
 lo = np.array([0.5, 0.05, 0.4, 0.5, 0.3, 0.10, 0.01])
 hi = np.array([2.0, 0.20, 1.2, 2.0, 1.0, 0.40, 0.12])
 N = 40000
 
-# ---- Latin Hypercube sampling ----
 def lhs(n, d):
     u = (rng.permutation(np.tile(np.arange(n), (d,1)).T).astype(float))
-    # per-column independent permutations
     X = np.empty((n,d))
     for j in range(d):
         perm = rng.permutation(n)
@@ -41,8 +24,7 @@ U = lhs(N, len(names))
 X = lo + U*(hi-lo)
 sigma,delta,alpha,K,theta,mu,gamma = [X[:,i] for i in range(7)]
 
-# ---- solve model per sample ----
-P1 = np.full(N, np.nan); M1 = np.full(N, np.nan)  # healthy branch (smaller P)
+P1 = np.full(N, np.nan); M1 = np.full(N, np.nan)
 n_interior = np.zeros(N, int)
 washout_stable = np.zeros(N, bool)
 bistable = np.zeros(N, bool)
@@ -61,7 +43,7 @@ for i in range(N):
     washout_stable[i] = (theta[i]*P0/(K[i]+P0) - mu[i] - gamma[i]*P0) < 0
     if roots:
         roots.sort()
-        P1[i], M1[i] = roots[0]      # smaller P = healthy (high biomass) branch
+        P1[i], M1[i] = roots[0]
     bistable[i] = (len(roots) == 2) and washout_stable[i]
 
 log("="*64)
@@ -80,12 +62,10 @@ log("  Samples that are BISTABLE (both together)     : %5.1f%%" % (100*bistable.
 log("  => bistability occupies a large, open region of parameter space.")
 log("")
 
-# ---- TEST 2: PRCC of inputs on healthy biomass M1* (feasible samples) ----
 def prcc(Xin, y):
     mask = np.isfinite(y)
     Xr = Xin[mask]; yr = y[mask]
-    # rank transform
-    def rank(v): 
+    def rank(v):
         o = np.argsort(np.argsort(v)); return o.astype(float)
     R = np.column_stack([rank(Xr[:,j]) for j in range(Xr.shape[1])])
     ry = rank(yr)
@@ -93,7 +73,6 @@ def prcc(Xin, y):
     for j in range(d):
         others = [k for k in range(d) if k!=j]
         A = np.column_stack([np.ones(len(R)), R[:,others]])
-        # residuals of R[:,j] and ry after regressing on others
         bx,_,_,_ = np.linalg.lstsq(A, R[:,j], rcond=None); ex = R[:,j]-A@bx
         by,_,_,_ = np.linalg.lstsq(A, ry,      rcond=None); ey = ry     -A@by
         out[j] = np.corrcoef(ex,ey)[0,1]
@@ -109,14 +88,12 @@ log("  => sign/magnitude match mechanism: higher toxicity(gamma)/decay(delta,mu)
 log("     lower biomass; higher growth(theta)/supply(sigma) raise it.")
 log("")
 
-# ---- TEST 3: numerical vs closed-form fold, across random (theta,mu,K) ----
 log("TEST 3 - Closed-form fold gamma_c = (sqrt(theta)-sqrt(mu))^2/K verified")
 log("-"*64)
 errs = []
 for _ in range(2000):
     th = rng.uniform(0.3,1.0); m = rng.uniform(0.1,min(th,0.4)); k = rng.uniform(0.5,2.0)
     gc = (np.sqrt(th)-np.sqrt(m))**2/k
-    # numerical: largest gamma with non-negative discriminant of the quadratic
     gg = np.linspace(1e-4, 2*gc+1e-3, 4000)
     b = m + gg*k - th; disc = b*b - 4*gg*(m*k)
     valid = gg[disc>=0]
@@ -127,13 +104,12 @@ log("  max |numerical - closed form| over 2000 draws = %.2e" % np.nanmax(errs))
 log("  mean abs error                                = %.2e" % np.nanmean(errs))
 log("  => the closed-form tipping threshold is exact.")
 log("")
-log("NOTE: these are supplementary robustness checks, provided as optional")
+log("NOTE: these are supplementary robustness checks provided as optional")
 log("material. They do not alter any verified value in the manuscript.")
 
 with open("robustness_report.txt","w") as f:
     f.write("\n".join(lines)+"\n")
 
-# ---------------- figure ----------------
 fig = plt.figure(figsize=(12,3.6))
 
 ax1 = fig.add_subplot(1,3,1)
