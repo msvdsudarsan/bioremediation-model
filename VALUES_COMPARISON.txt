@@ -1,0 +1,37 @@
+PAPER VALUES  vs  MATLAB OUTPUT  vs  INDEPENDENT PYTHON CHECK
+=============================================================
+Parameter set: sigma=1.0, delta=0.1, alpha=0.8, K=1.0,
+               theta=0.6, mu=0.2, gamma=0.05.
+
+EQUILIBRIA (P*, M*), eigenvalues, and type
+-----------------------------------------------------------------------------
+              PAPER (Table 2)        MATLAB console         Python re-check
+E0 washout    (10.0000, 0.0000)      (10.0000, 0.0000)      (10.0000, 0.0000)
+  eigenvalues -0.1000, -0.1545       -0.1000, -0.1545       -0.1000, -0.1545
+  type        stable sink            STABLE (sink)          STABLE            MATCH
+
+E2 coexist    (6.3723, 0.5246)       (6.3723, 0.5246)       (6.3723, 0.5246)
+  eigenvalues -0.1844, +0.0767       -0.1844, +0.0767       -0.1844, +0.0767
+  type        saddle                 SADDLE                 SADDLE            MATCH
+
+E1 coexist    (0.6277, 3.0379)       (0.6277, 3.0379)       (0.6277, 3.0379)
+  eigenvalues -0.8141, -0.2031       -0.8141, -0.2031       -0.8141, -0.2031
+  type        stable sink            STABLE (sink)          STABLE            MATCH
+-----------------------------------------------------------------------------
+
+QUADRATIC ROOTS (Eq. 10):  P1*=0.6277, P2*=6.3723
+  Paper text: P1*~=0.628, P2*~=6.372  -> MATCH
+BIOMASS (Eq. 11):          M1*=3.0379, M2*=0.5246
+  Paper text: M1*~=3.04,  M2*~=0.52   -> MATCH
+
+CRITICAL TOXICITY (fold)
+  Closed form gamma_c = (sqrt(theta)-sqrt(mu))^2 / K = 0.107180
+  Paper text / Figure 3 : gamma_c ~ 0.107
+  Numerical fold (last gamma with two admissible roots): 0.1072
+  -> MATCH
+
+CONCLUSION: All manuscript numbers agree to the printed precision with the
+MATLAB console output and with an independent Python recomputation. The
+corrected Listing 1 now reproduces the Figure 3 biomass-vs-gamma curve
+exactly (admissibility filter P* < sigma/delta applied, M* computed, det J
+classification, fold at gamma_c ~ 0.107).
